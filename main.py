@@ -1,11 +1,12 @@
 #Python imports
+import json
 from uuid import UUID
 from datetime import date, datetime
 
 #FastAPI imports
 from typing import Optional, List
 
-from fastapi import FastAPI, status
+from fastapi import Body, FastAPI, status
 
 #Pydantic imports
 from pydantic import BaseModel, EmailStr, Field
@@ -64,7 +65,7 @@ class Tweet(BaseModel):
     summary="Register a user",
     tags=["Users"]
 )
-def signup():
+def signup(user: UserRegister = Body(...)):
     """
     Signup a User
 
@@ -86,10 +87,18 @@ def signup():
 
         - last_name: str
         
-        - birth_date: str
+        - birth_date: date
         
     """
-    pass
+    with open("users.json", "r+", encoding="utf-8") as f: 
+        results = json.loads(f.read())
+        user_dict = user.dict()
+        user_dict["user_id"] = str(user_dict["user_id"])
+        user_dict["birth_date"] = str(user_dict["birth_date"])
+        results.append(user_dict)
+        f.seek(0)
+        f.write(json.dumps(results))
+        return user
 
 @app.post(
     path="/login",
