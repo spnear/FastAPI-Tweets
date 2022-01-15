@@ -37,7 +37,7 @@ class User(UserBase):
     )
     birth_date: Optional[date] = Field(default=None)
 
-class Tweets(BaseModel):
+class Tweet(BaseModel):
     tweet_id: UUID = Field(...)
     content: str = Field(
         ...,
@@ -50,9 +50,6 @@ class Tweets(BaseModel):
 
 #Path Operations
 
-@app.get(path="/")
-def home():
-    return {"Twitter API": "Working!"}
 
 #Users:
 @app.post(
@@ -115,5 +112,58 @@ def delete_a_user():
 def update():
     pass
 
+#Tweets
+
+@app.get(
+    path="/",
+    response_model=List[Tweet],
+    status_code=status.HTTP_200_OK,
+    summary="Show all tweets",
+    tags=["Tweets"]
+    )
+def home():
+    return {"Twitter API": "Working!"}
 
 
+@app.post(
+    path="/post",
+    response_model=Tweet,
+    status_code=status.HTTP_201_CREATED,
+    summary="Post a tweet",
+    tags=["Tweets"]
+)
+def post():
+    pass
+
+
+@app.get(
+    path="/tweets/{tweet_id}",
+    response_model=Tweet,
+    status_code=status.HTTP_200_OK,
+    summary="Show a tweet",
+    tags=["Tweets"]
+)
+def show_a_tweet():
+    pass
+
+
+@app.delete(
+    path="/tweets/{tweet_id}/delete",
+    response_model=Tweet,
+    status_code=status.HTTP_200_OK,
+    summary="Delete a tweet",
+    tags=["Tweets"]
+)
+def delete_a_tweet():
+    pass
+
+
+@app.put(
+    path="/tweets/{tweet_id}/update",
+    response_model=Tweet,
+    status_code=status.HTTP_200_OK,
+    summary="Update a tweet",
+    tags=["Tweets"]
+)
+def update_a_tweet():
+    pass
